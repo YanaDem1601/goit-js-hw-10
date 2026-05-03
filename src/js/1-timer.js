@@ -17,7 +17,14 @@ const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
-  minuteIncrement: 1,
+    minuteIncrement: 1,
+  locale: {
+    firstDayOfWeek: 1, 
+    weekdays: {
+      shorthand: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    },
+  },
   onClose(selectedDates) {
     selectedDate = selectedDates[0];
 
@@ -36,47 +43,48 @@ const options = {
 
 flatpickr(input, options);
 
-startBtn.addEventListener('click', () => {
-    startBtn.disabled = true;
-    input.disabled = true;
+    startBtn.addEventListener('click', () => {
+        startBtn.disabled = true;
+        input.disabled = true;
 
-    timerId = setInterval(() => {
-        const currentTime = Date.now();
-        const deltaTime = selectedDate - currentTime;
-        if (deltaTime <= 0) {
-            clearInterval(timerId);
-            updateTimerDisplay(0, 0, 0, 0);
-            input.disabled = false;
-            return;
-        }
-        const time = convertMs(deltaTime);
-        updateTimerDisplay(time.days, time.hours, time.minutes, time.seconds);
-    }, 1000);
-});
-function addLeadingZero(value) {
-    return String(value).padStart(2, '0');
-}
-function updateTimerDisplay(days, hours, minutes, seconds) {
-    daysEl.textContent = addLeadingZero(days);
-    hoursEl.textContent = addLeadingZero(hours);
-    minutesEl.textContent = addLeadingZero(minutes);
-    secondsEl.textContent = addLeadingZero(seconds);
-}
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
+        timerId = setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = selectedDate - currentTime;
+            if (deltaTime <= 0) {
+                clearInterval(timerId);
+                updateTimerDisplay(0, 0, 0, 0);
+                input.disabled = false;
+                return;
+            }
+            const time = convertMs(deltaTime);
+            updateTimerDisplay(time.days, time.hours, time.minutes, time.seconds);
+        }, 1000);
+    });
+    function addLeadingZero(value) {
+        return String(value).padStart(2, '0');
+    }
+    function updateTimerDisplay(days, hours, minutes, seconds) {
+        daysEl.textContent = addLeadingZero(days);
+        hoursEl.textContent = addLeadingZero(hours);
+        minutesEl.textContent = addLeadingZero(minutes);
+        secondsEl.textContent = addLeadingZero(seconds);
+    }
+    function convertMs(ms) {
+        // Number of milliseconds per unit of time
+        const second = 1000;
+        const minute = second * 60;
+        const hour = minute * 60;
+        const day = hour * 24;
 
-  // Remaining days
-  const days = Math.floor(ms / day);
-  // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+        // Remaining days
+        const days = Math.floor(ms / day);
+        // Remaining hours
+        const hours = Math.floor((ms % day) / hour);
+        // Remaining minutes
+        const minutes = Math.floor(((ms % day) % hour) / minute);
+        // Remaining seconds
+        const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  return { days, hours, minutes, seconds };
-}
+        return { days, hours, minutes, seconds };
+    }
+
